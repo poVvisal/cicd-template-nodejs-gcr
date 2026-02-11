@@ -1,5 +1,3 @@
-# cicd-template-nodejs-gcr
-
 # Reusable CI/CD Workflows Template (GitHub Actions → Docker Hub → Google Cloud Run)
 
 Use this file as a reference when you want to set up the same CI/CD pattern in another Node.js project. Copy the workflows below into the new repo under `.github/workflows/` and adjust the variables/secrets as described.
@@ -172,10 +170,31 @@ For the GCP project referenced by `GCP_PROJECT_ID`:
   - Artifact Registry or Container Registry (if storing images there)
   - Cloud Billing API (if you keep the explicit enable step)
 
-- Create a service account for GitHub Actions (for example, `github-actions-deployer`) and grant it roles such as:
-  - `roles/run.admin`
-  - `roles/iam.serviceAccountUser`
-  - `roles/artifactregistry.writer` or equivalent (if pushing to GCP registry)
+- Create a service account for GitHub Actions (for example, `github-actions-deployer`) and grant it the necessary roles.
+
+  **Step 2: Create a New Service Account**
+
+  - Click on the **Create Service Account** button in the IAM & Admin → Service Accounts page.
+  - In the form that opens, fill in:
+    - **Name**: Enter a descriptive name (for example, `ci-cd-sa`).
+    - **ID**: This will auto-fill based on the name.
+    - **Description**: Add a description such as "Used for deploying Node.js app to Cloud Run."
+  - Click **Create and Continue** to proceed.
+
+  **Step 3: Assign Necessary Roles (Permissions)**
+
+  On the next screen, assign the following roles to the service account, one by one:
+
+  - **Cloud Run Admin** – Allows management of Cloud Run services.
+  - **Service Account User** – Grants the ability to use service accounts.
+  - **Service Usage Admin** – Enables control over enabling APIs.
+  - **Viewer** – Provides read-only access to view resources.
+
+  To add each role:
+
+  - Click on **Select a role**.
+  - Use the search bar to type the role name (for example, "Cloud Run Admin") and select it.
+  - Repeat for all four roles.
 
 - Decide and document:
   - Region (`GCR_REGION`), e.g. `us-central1`.
